@@ -2,6 +2,7 @@ from ai2thor.controller import Controller
 import numpy as np 
 from scipy.spatial.transform import Rotation as R
 from transformers import CLIPProcessor, CLIPModel
+import seaborn as sns
 
 def get_sim_cam_mat_with_fov(h, w, fov):
 
@@ -86,12 +87,16 @@ if __name__ == "__main__":
     from lseg_unit_test import LSegPredictor
     lseg_predictor = LSegPredictor()
     lang = "cabinet,sink,counter,ceiling,floor,window,drawer,vegetables,wall,fridge"
+    #lang = "wall,floor,chair,door,table,picture,cabinet,cushion,window,sofa,bed,curtain,plant,sink,stairs,ceiling,toilet,towl,mirror,tv_monitor,counter,lighting,shelving,seating,furniture,appliances"
     labels = lang.split(",")
     # make random color palette
     colors = np.random.rand(len(labels), 3)*255
+    colors = sns.color_palette("husl", len(labels))
+    colors = np.array(colors) * 255
+
     # ... (insert transformation_matrix and euler_to_rotation_matrix functions here)
 
-    c = Controller(scene='FloorPlan13', gridSize=precision, renderDepthImage=True, renderClassImage=True, renderObjectImage=True, renderImage=True, width=128, height=128, fieldOfView=90)
+    c = Controller(scene='FloorPlan13', gridSize=precision, renderDepthImage=True, renderClassImage=True, renderObjectImage=True, renderImage=True, width=512, height=512, fieldOfView=90)
     # get reachable positions
     reachable_positions = c.step(action='GetReachablePositions', agentId = 0).metadata['actionReturn']
     # make it np array
@@ -108,7 +113,9 @@ if __name__ == "__main__":
     angle_degrees = -90
     reachable_positions = rotate_2d(reachable_positions.T, angle_degrees).T
 
-    action_list = ['Pass','RotateRight','RotateRight','MoveAhead','MoveAhead']
+    action_list = ['Pass','RotateRight','RotateRight','MoveAhead','MoveAhead','MoveAhead','RotateRight','MoveAhead',
+                'MoveAhead','MoveAhead','MoveAhead','RotateRight','MoveAhead','MoveAhead','MoveAhead','MoveAhead',
+                'MoveAhead','MoveAhead','MoveAhead','MoveAhead','MoveAhead','MoveAhead','MoveAhead','MoveAhead',]
 
 
     for action in action_list:
@@ -202,7 +209,7 @@ if __name__ == "__main__":
             else:
                 # gray 
                 color_map[i, j, :] = [128, 128, 128]
-                
+
     # Plot
     plt.imshow(color_map/255.)
     # plt legend out of the image

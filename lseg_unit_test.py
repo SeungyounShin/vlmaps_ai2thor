@@ -31,7 +31,7 @@ c.stop()'''
 class LSegPredictor:
     def __init__(self):
 
-        lang = "frdige,countertop,sink,cabinet,floor,wall,ceiling,window"
+        lang = "wall,floor,chair,door,table,picture,cabinet,cushion,window,sofa,bed,curtain,plant,sink,stairs,ceiling,toilet,towl,mirror,tv_monitor,counter,lighting,shelving,seating,furniture,appliances"
         labels = lang.split(",")
 
         # loading models
@@ -54,7 +54,7 @@ class LSegPredictor:
         model = LSegEncNet(lang, arch_option=0,
                                 block_depth=0,
                                 activation='lrelu',
-                                crop_size=128)
+                                crop_size=512)
 
         model_state_dict = model.state_dict()
         pretrained_state_dict = torch.load("lseg/checkpoints/demo_e200.ckpt", map_location=torch.device(device))
